@@ -9,14 +9,14 @@
 			(async () => {
 				const zjb = new Zjb();
 				const file = await fetch("main.wasm");
-				const inputObject = {
+				const instantiatedFile = await WebAssembly.instantiateStreaming(file,{
 					["env"]: {
 						["memory"]: new WebAssembly.Memory({["initial"]: 1}),
 						["__stack_pointer"]: 0
 					},
 					["zjb"]: zjb.imports
-				};
-				let instantiatedFile = await WebAssembly.instantiateStreaming(file,inputObject);
+				});
+
 				const memoryBuffer = new Uint8Array(instantiatedFile.instance.exports.memory.buffer);
 
 				const dynamicPathVariables = [];
